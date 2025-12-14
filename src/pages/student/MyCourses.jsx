@@ -7,11 +7,12 @@ import {
   ClockCircleOutlined,
   VideoCameraOutlined,
   FileTextOutlined,
+  DollarOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import * as paymentApi from '../../api/paymentApi';
-import * as meetingApi from '../../api/meetingApi';
+import paymentApi from '../../api/paymentApi';
+import meetingApi from '../../api/meetingApi';
 import MeetingJoinCard from '../../components/student/MeetingJoinCard';
 
 const { Title, Text } = Typography;
@@ -39,7 +40,7 @@ const MyCourses = () => {
       // Get meetings for enrolled courses
       const enrolledCourseIds = enrollmentsData.map(e => e.course?._id || e.course);
       if (enrolledCourseIds.length > 0) {
-        const meetingsPromises = enrolledCourseIds.map(courseId => 
+        const meetingsPromises = enrolledCourseIds.map(courseId =>
           meetingApi.getMeetingsByCourse(courseId)
         );
         const meetingsResults = await Promise.allSettled(meetingsPromises);
@@ -70,7 +71,7 @@ const MyCourses = () => {
   return (
     <div>
       <Title level={2}>My Courses</Title>
-      
+
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}
@@ -117,8 +118,8 @@ const MyCourses = () => {
                 >
                   <List.Item.Meta
                     avatar={
-                      <Avatar 
-                        size={64} 
+                      <Avatar
+                        size={64}
                         icon={<BookOutlined />}
                         style={{ background: '#1890ff' }}
                       />
@@ -168,7 +169,7 @@ const MyCourses = () => {
           ) : (
             <Empty
               description={
-                activeTab === 'active' 
+                activeTab === 'active'
                   ? "You don't have any active courses. Explore courses to get started!"
                   : `No ${activeTab} courses found`
               }
@@ -225,14 +226,14 @@ const MyCourses = () => {
                 </Title>
                 <Text type="secondary">Active Courses</Text>
               </div>
-              
+
               <div style={{ marginBottom: 16 }}>
                 <Title level={2} style={{ margin: 0 }}>
                   {meetings.length}
                 </Title>
                 <Text type="secondary">Upcoming Meetings</Text>
               </div>
-              
+
               <div>
                 <Title level={2} style={{ margin: 0 }}>
                   {Math.floor(enrollments.reduce((sum, e) => sum + (e.amountPaid || 0), 0))}

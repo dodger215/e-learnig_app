@@ -18,6 +18,7 @@ import StudentDashboard from './pages/student/Dashboard';
 import ExploreCourses from './pages/student/ExploreCourses';
 import MyCourses from './pages/student/MyCourses';
 import StudentCourseDetails from './pages/student/CourseDetails';
+import { MyMeetings } from './routes';
 
 // Tutor Pages
 import TutorDashboard from './pages/tutor/Dashboard';
@@ -173,6 +174,14 @@ function App() {
                     <ProtectedRoute allowedRoles={['student']}>
                       <LayoutComponent>
                         <StudentCourseDetails />
+                      </LayoutComponent>
+                    </ProtectedRoute>
+                  } />
+
+                  <Route path="/student/meetings" element={
+                    <ProtectedRoute allowedRoles={['student']}>
+                      <LayoutComponent>
+                        <MyMeetings />
                       </LayoutComponent>
                     </ProtectedRoute>
                   } />

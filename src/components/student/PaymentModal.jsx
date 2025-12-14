@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Steps, Button, Typography, Card, Input, message } from 'antd';
 import { LoadingOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import * as paymentApi from '../../api/paymentApi';
+import paymentApi from '../../api/paymentApi';
 
 const { Step } = Steps;
 const { Title, Text } = Typography;
@@ -49,7 +49,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
       setPaymentUrl(response.authorization_url);
       setReference(response.reference);
       setCurrentStep(1);
-      
+
       // Open payment in new window
       window.open(response.authorization_url, '_blank', 'width=600,height=700');
     } catch (error) {
@@ -70,7 +70,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
       await paymentApi.verifyPayment(reference);
       setCurrentStep(2);
       message.success('Payment verified successfully!');
-      
+
       // Wait a moment before closing
       setTimeout(() => {
         onSuccess();
@@ -92,7 +92,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
             <Text type="secondary" style={{ display: 'block', marginBottom: 24 }}>
               {course ? 'You are about to enroll in this course' : 'Please select a course'}
             </Text>
-            
+
             {course ? (
               <Card style={{ maxWidth: 400, margin: '0 auto' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -116,10 +116,10 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
                 </Text>
               </div>
             )}
-            
-            <Button 
-              type="primary" 
-              size="large" 
+
+            <Button
+              type="primary"
+              size="large"
               onClick={handleInitializePayment}
               loading={loading}
               disabled={!course}
@@ -129,7 +129,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
             </Button>
           </div>
         );
-      
+
       case 1:
         return (
           <div style={{ textAlign: 'center', padding: 24 }}>
@@ -138,17 +138,17 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
             <Text type="secondary" style={{ display: 'block', marginBottom: 24 }}>
               Please complete the payment in the opened window. Then click "Verify Payment" below.
             </Text>
-            
+
             {reference && (
               <div style={{ marginBottom: 16 }}>
                 <Text>Reference: </Text>
                 <Text copyable code>{reference}</Text>
               </div>
             )}
-            
+
             <div>
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 onClick={handleVerifyPayment}
                 loading={loading}
                 style={{ marginRight: 8 }}
@@ -163,7 +163,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
             </div>
           </div>
         );
-      
+
       case 2:
         return (
           <div style={{ textAlign: 'center', padding: 24 }}>
@@ -175,7 +175,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
             <Text>You can now access all course materials and join scheduled meetings.</Text>
           </div>
         );
-      
+
       default:
         return (
           <div style={{ textAlign: 'center', padding: 24 }}>
@@ -200,7 +200,7 @@ const PaymentModal = ({ visible, course, onClose, onSuccess }) => {
           <Step key={index} title={step.title} />
         ))}
       </Steps>
-      
+
       {renderStepContent()}
     </Modal>
   );

@@ -12,9 +12,9 @@ import {
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
-import * as paymentApi from '../../api/paymentApi';
-import * as meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
+import paymentApi from '../../api/paymentApi';
+import meetingApi from '../../api/meetingApi';
 import CourseCard from '../../components/student/CourseCard';
 import MeetingJoinCard from '../../components/student/MeetingJoinCard';
 import PaymentModal from '../../components/student/PaymentModal';
@@ -39,14 +39,14 @@ const StudentDashboard = () => {
         courseApi.getCourses(),
         paymentApi.getEnrollments ? paymentApi.getEnrollments() : paymentApi.checkSubscriptionStatus(),
       ]);
-      
+
       setCourses(coursesData.slice(0, 3));
       setEnrollments(enrollmentsData);
-      
+
       // Get meetings for enrolled courses
       const enrolledCourseIds = enrollmentsData.map(e => e.course?._id || e.course);
       if (enrolledCourseIds.length > 0) {
-        const meetingsPromises = enrolledCourseIds.map(courseId => 
+        const meetingsPromises = enrolledCourseIds.map(courseId =>
           meetingApi.getMeetingsByCourse(courseId)
         );
         const meetingsResults = await Promise.allSettled(meetingsPromises);
@@ -95,13 +95,13 @@ const StudentDashboard = () => {
       </div>
 
       <Alert
-        message="Your Learning Journey"
+        title="Your Learning Journey"
         description="Track your progress, access courses, and join live sessions from here."
         type="info"
         showIcon
         style={{ marginBottom: 24 }}
       />
-      
+
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>
@@ -173,8 +173,8 @@ const StudentDashboard = () => {
           >
             {meetings.length > 0 ? (
               meetings.map(meeting => (
-                <MeetingJoinCard 
-                  key={meeting._id} 
+                <MeetingJoinCard
+                  key={meeting._id}
                   meeting={meeting}
                   course={courses.find(c => c._id === meeting.course)}
                 />
@@ -210,7 +210,7 @@ const StudentDashboard = () => {
                           <Text type="secondary">Expires: {new Date(enrollment.expiresAt).toLocaleDateString()}</Text>
                           <Progress
                             percent={Math.floor(
-                              (Date.now() - new Date(enrollment.createdAt).getTime()) / 
+                              (Date.now() - new Date(enrollment.createdAt).getTime()) /
                               (new Date(enrollment.expiresAt).getTime() - new Date(enrollment.createdAt).getTime()) * 100
                             )}
                             size="small"

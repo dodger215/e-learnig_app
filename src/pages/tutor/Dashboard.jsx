@@ -14,9 +14,9 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSocket } from '../../contexts/SocketContext';
-import * as courseApi from '../../api/courseApi';
-import * as paymentApi from '../../api/paymentApi';
-import * as meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
+import paymentApi from '../../api/paymentApi';
+import meetingApi from '../../api/meetingApi';
 import ScheduleMeetingModal from '../../components/tutor/ScheduleMeetingModal';
 
 const { Title, Text } = Typography;
@@ -40,7 +40,7 @@ const TutorDashboard = () => {
   useEffect(() => {
     fetchDashboardData();
     setupSocketListeners();
-    
+
     return () => {
       if (socket) {
         socket.off('earning_update');
@@ -52,7 +52,7 @@ const TutorDashboard = () => {
     if (socket && user?._id) {
       socket.emit('join_personal', user._id);
       socket.emit('dashboard_subscribe', 'tutor');
-      
+
       socket.on('earning_update', (data) => {
         setEarnings(prev => [{
           key: Date.now(),
@@ -62,13 +62,13 @@ const TutorDashboard = () => {
           timestamp: new Date().toISOString(),
           message: data.message,
         }, ...prev.slice(0, 4)]);
-        
+
         setStats(prev => ({
           ...prev,
           totalEarnings: prev.totalEarnings + data.amount,
           walletBalance: data.totalBalance,
         }));
-        
+
         // Show notification if permission granted
         if (Notification.permission === 'granted') {
           new Notification('New Earning!', {
@@ -87,10 +87,10 @@ const TutorDashboard = () => {
       ]);
 
       const tutorCourses = coursesData.filter(course => course.tutor?._id === user?._id);
-      
+
       let totalStudents = 0;
       let totalEarnings = 0;
-      
+
       tutorCourses.forEach(course => {
         totalStudents += course.students?.length || 0;
         totalEarnings += (course.price || 0) * (course.students?.length || 0);
@@ -109,7 +109,7 @@ const TutorDashboard = () => {
 
       setCourses(tutorCourses.slice(0, 3));
       setMeetings(allMeetings.slice(0, 3));
-      
+
       setStats({
         totalCourses: tutorCourses.length,
         totalStudents,
@@ -217,7 +217,7 @@ const TutorDashboard = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now < startTime) {
           return <Tag color="blue">Upcoming</Tag>;
         } else if (now >= startTime && now <= endTime) {
@@ -234,7 +234,7 @@ const TutorDashboard = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now >= startTime && now <= endTime) {
           return (
             <Link to={`/meeting/tutor/${record._id}`}>
@@ -253,8 +253,8 @@ const TutorDashboard = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={2}>Tutor Dashboard</Title>
-        <Button 
-          type="primary" 
+        <Button
+          type="primary"
           icon={<CalendarOutlined />}
           onClick={() => setShowScheduleModal(true)}
         >
@@ -262,14 +262,14 @@ const TutorDashboard = () => {
         </Button>
       </div>
 
-      <Alert
-        message={`Welcome back, ${user?.name}!`}
+      {/* <Alert
+        title={`Welcome back, ${user?.name}!`}
         description="Here's an overview of your teaching activities and earnings."
         type="info"
         showIcon
         style={{ marginBottom: 24 }}
-      />
-      
+      /> */}
+
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>
@@ -277,11 +277,11 @@ const TutorDashboard = () => {
               title="Total Courses"
               value={stats.totalCourses}
               prefix={<BookOutlined />}
-              valueStyle={{ color: '#1890ff' }}
+              styles={{ content: { color: '#1890ff' } }}
             />
-            <Progress 
-              percent={Math.min(stats.totalCourses * 10, 100)} 
-              size="small" 
+            <Progress
+              percent={Math.min(stats.totalCourses * 10, 100)}
+              size="small"
               style={{ marginTop: 8 }}
             />
           </Card>
@@ -292,7 +292,7 @@ const TutorDashboard = () => {
               title="Total Students"
               value={stats.totalStudents}
               prefix={<TeamOutlined />}
-              valueStyle={{ color: '#52c41a' }}
+              styles={{ content: { color: '#52c41a' } }}
             />
             <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
               <ArrowUpOutlined style={{ color: '#52c41a', marginRight: 4 }} />
@@ -307,7 +307,7 @@ const TutorDashboard = () => {
               value={stats.totalEarnings}
               prefix={<DollarOutlined />}
               suffix="GHS"
-              valueStyle={{ color: '#faad14' }}
+              styles={{ content: { color: '#faad14' } }}
             />
             <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
               <ArrowUpOutlined style={{ color: '#52c41a', marginRight: 4 }} />
@@ -322,7 +322,7 @@ const TutorDashboard = () => {
               value={stats.walletBalance}
               prefix={<RiseOutlined />}
               suffix="GHS"
-              valueStyle={{ color: '#722ed1' }}
+              styles={{ content: { color: '#722ed1' } }}
             />
             <Button type="link" size="small" style={{ marginTop: 8, padding: 0 }}>
               Withdraw Funds
@@ -367,10 +367,10 @@ const TutorDashboard = () => {
           >
             {courses.length > 0 ? (
               courses.map(course => (
-                <div 
-                  key={course._id} 
-                  style={{ 
-                    padding: '12px 0', 
+                <div
+                  key={course._id}
+                  style={{
+                    padding: '12px 0',
                     borderBottom: '1px solid #f0f0f0',
                     display: 'flex',
                     alignItems: 'center',
@@ -408,12 +408,12 @@ const TutorDashboard = () => {
                 <Title level={3} style={{ margin: 0 }}>{stats.upcomingMeetings}</Title>
                 <Text type="secondary">Upcoming Meetings</Text>
               </div>
-              
+
               <div style={{ marginBottom: 24 }}>
                 <Title level={3} style={{ margin: 0 }}>{stats.totalStudents}</Title>
                 <Text type="secondary">Total Students</Text>
               </div>
-              
+
               <div>
                 <Title level={3} style={{ margin: 0 }}>{courses.length}</Title>
                 <Text type="secondary">Active Courses</Text>

@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
+import courseApi from '../../api/courseApi';
 
 const { Title, Text } = Typography;
 

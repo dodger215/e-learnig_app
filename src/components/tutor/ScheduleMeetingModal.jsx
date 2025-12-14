@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Select, DatePicker, TimePicker, InputNumber, message } from 'antd';
 import { useAuth } from '../../contexts/AuthContext';
-import * as meetingApi from '../../api/meetingApi';
-import * as courseApi from '../../api/courseApi';
+import meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
 import { useEffect } from 'react';
 
 const { TextArea } = Input;
@@ -34,7 +34,7 @@ const ScheduleMeetingModal = ({ visible, onClose, onSuccess }) => {
     setLoading(true);
     try {
       const startTime = new Date(values.date.format('YYYY-MM-DD') + 'T' + values.time.format('HH:mm:ss'));
-      
+
       const meetingData = {
         title: values.title,
         courseId: values.courseId,

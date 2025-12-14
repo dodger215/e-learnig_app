@@ -13,8 +13,8 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
-import * as meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
+import meetingApi from '../../api/meetingApi';
 import ScheduleMeetingModal from '../../components/tutor/ScheduleMeetingModal';
 
 const { Title, Text } = Typography;
@@ -41,7 +41,7 @@ const TutorCourseDetails = () => {
 
       if (courseData) {
         setCourse(courseData);
-        
+
         // Get meetings for this course
         const meetingsData = await meetingApi.getMeetingsByCourse(id);
         setMeetings(meetingsData);
@@ -145,7 +145,7 @@ const TutorCourseDetails = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now < startTime) {
           return <Tag color="blue">Upcoming</Tag>;
         } else if (now >= startTime && now <= endTime) {
@@ -162,7 +162,7 @@ const TutorCourseDetails = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now >= startTime && now <= endTime) {
           return (
             <Link to={`/meeting/tutor/${record._id}`}>
@@ -179,7 +179,7 @@ const TutorCourseDetails = () => {
 
   return (
     <div>
-      <div style={{ 
+      <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: 40,
         borderRadius: 8,
@@ -197,7 +197,7 @@ const TutorCourseDetails = () => {
             <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 16 }}>
               {course.description}
             </Text>
-            
+
             <div style={{ display: 'flex', gap: 32, marginTop: 24 }}>
               <div>
                 <TeamOutlined style={{ marginRight: 8 }} />
@@ -217,11 +217,11 @@ const TutorCourseDetails = () => {
               </div>
             </div>
           </Col>
-          
+
           <Col span={6}>
             <div style={{ display: 'flex', gap: 16, justifyContent: 'flex-end' }}>
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 icon={<CalendarOutlined />}
                 onClick={() => setShowScheduleModal(true)}
               >
@@ -276,8 +276,8 @@ const TutorCourseDetails = () => {
                   />
                 ) : (
                   <Empty description="No meetings scheduled yet">
-                    <Button 
-                      type="primary" 
+                    <Button
+                      type="primary"
                       icon={<PlusOutlined />}
                       onClick={() => setShowScheduleModal(true)}
                     >
@@ -287,7 +287,7 @@ const TutorCourseDetails = () => {
                 )}
               </Card>
             </Col>
-            
+
             <Col span={8}>
               <Card title="Student Progress">
                 {students.length > 0 ? (
@@ -329,7 +329,7 @@ const TutorCourseDetails = () => {
             </Col>
           </Row>
         </TabPane>
-        
+
         <TabPane tab="Students" key="students">
           <Card>
             <Table
@@ -340,13 +340,13 @@ const TutorCourseDetails = () => {
             />
           </Card>
         </TabPane>
-        
+
         <TabPane tab="Meetings" key="meetings">
           <Card
             title="All Meetings"
             extra={
-              <Button 
-                type="primary" 
+              <Button
+                type="primary"
                 icon={<PlusOutlined />}
                 onClick={() => setShowScheduleModal(true)}
               >
@@ -363,8 +363,8 @@ const TutorCourseDetails = () => {
               />
             ) : (
               <Empty description="No meetings scheduled yet">
-                <Button 
-                  type="primary" 
+                <Button
+                  type="primary"
                   icon={<PlusOutlined />}
                   onClick={() => setShowScheduleModal(true)}
                 >
@@ -374,13 +374,13 @@ const TutorCourseDetails = () => {
             )}
           </Card>
         </TabPane>
-        
+
         <TabPane tab="Content" key="content">
           <Card title="Course Content">
             <Empty description="Add course content modules here" />
           </Card>
         </TabPane>
-        
+
         <TabPane tab="Analytics" key="analytics">
           <Card title="Course Analytics">
             <Row gutter={[16, 16]}>

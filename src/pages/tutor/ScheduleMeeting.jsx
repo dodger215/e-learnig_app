@@ -3,8 +3,8 @@ import { Card, Typography, Table, Tag, Button, Empty } from 'antd';
 import { CalendarOutlined, VideoCameraOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
-import * as meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
+import meetingApi from '../../api/meetingApi';
 import ScheduleMeetingModal from '../../components/tutor/ScheduleMeetingModal';
 
 const { Title, Text } = Typography;
@@ -89,7 +89,7 @@ const ScheduleMeeting = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now < startTime) {
           return <Tag color="blue">Upcoming</Tag>;
         } else if (now >= startTime && now <= endTime) {
@@ -116,7 +116,7 @@ const ScheduleMeeting = () => {
         const now = new Date();
         const startTime = new Date(record.startTime);
         const endTime = new Date(startTime.getTime() + record.duration * 60000);
-        
+
         if (now >= startTime && now <= endTime) {
           return (
             <Link to={`/meeting/tutor/${record._id}`}>
@@ -140,8 +140,8 @@ const ScheduleMeeting = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <Title level={2}>Schedule & Manage Meetings</Title>
-        <Button 
-          type="primary" 
+        <Button
+          type="primary"
           icon={<PlusOutlined />}
           onClick={() => setShowScheduleModal(true)}
           size="large"
@@ -164,8 +164,8 @@ const ScheduleMeeting = () => {
           />
         ) : (
           <Empty description="No upcoming meetings">
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<PlusOutlined />}
               onClick={() => setShowScheduleModal(true)}
             >

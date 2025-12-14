@@ -13,9 +13,9 @@ import {
   DownloadOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
-import * as paymentApi from '../../api/paymentApi';
-import * as meetingApi from '../../api/meetingApi';
+import courseApi from '../../api/courseApi';
+import paymentApi from '../../api/paymentApi';
+import meetingApi from '../../api/meetingApi';
 import MeetingJoinCard from '../../components/student/MeetingJoinCard';
 import PaymentModal from '../../components/student/PaymentModal';
 
@@ -45,7 +45,7 @@ const StudentCourseDetails = () => {
 
       if (courseData) {
         setCourse(courseData);
-        
+
         // Check if enrolled
         const userEnrollment = enrollmentsData.find(
           e => (e.course?._id === id || e.course === id) && e.status === 'active'
@@ -101,12 +101,12 @@ const StudentCourseDetails = () => {
   }
 
   if (!course) {
-    return <Alert type="error" message="Course not found" />;
+    return <Alert type="error" title="Course not found" />;
   }
 
   return (
     <div>
-      <div style={{ 
+      <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: 40,
         borderRadius: 8,
@@ -124,7 +124,7 @@ const StudentCourseDetails = () => {
             <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: 16, marginBottom: 24 }}>
               {course.description}
             </Paragraph>
-            
+
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Avatar icon={<UserOutlined />} />
@@ -137,14 +137,14 @@ const StudentCourseDetails = () => {
                   </Text>
                 </div>
               </div>
-              
+
               <div>
                 <Rate disabled defaultValue={4.5} style={{ color: '#ffd700' }} />
                 <Text style={{ color: 'rgba(255,255,255,0.8)', marginLeft: 8 }}>
                   4.5 (128 reviews)
                 </Text>
               </div>
-              
+
               <div>
                 <Text strong style={{ color: 'white', display: 'block' }}>
                   {course.students?.length || 0}
@@ -155,7 +155,7 @@ const StudentCourseDetails = () => {
               </div>
             </div>
           </Col>
-          
+
           <Col span={8}>
             <Card style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
               <div style={{ textAlign: 'center' }}>
@@ -179,9 +179,9 @@ const StudentCourseDetails = () => {
                     <Title level={3} style={{ color: 'white', marginBottom: 16 }}>
                       {course.isFree ? 'Free' : `$${course.price}`}
                     </Title>
-                    <Button 
-                      type="primary" 
-                      size="large" 
+                    <Button
+                      type="primary"
+                      size="large"
                       icon={course.isFree ? <PlayCircleOutlined /> : <DollarOutlined />}
                       onClick={handleEnroll}
                       block
@@ -249,24 +249,24 @@ const StudentCourseDetails = () => {
                 />
               </Card>
             </Col>
-            
+
             <Col span={8}>
               <Card title="Course Details">
                 <div style={{ marginBottom: 16 }}>
                   <Text strong style={{ display: 'block', marginBottom: 4 }}>Duration</Text>
                   <Text type="secondary">{course.duration || 30} days access</Text>
                 </div>
-                
+
                 <div style={{ marginBottom: 16 }}>
                   <Text strong style={{ display: 'block', marginBottom: 4 }}>Level</Text>
                   <Text type="secondary">Beginner to Intermediate</Text>
                 </div>
-                
+
                 <div style={{ marginBottom: 16 }}>
                   <Text strong style={{ display: 'block', marginBottom: 4 }}>Prerequisites</Text>
                   <Text type="secondary">Basic computer knowledge</Text>
                 </div>
-                
+
                 <div style={{ marginBottom: 16 }}>
                   <Text strong style={{ display: 'block', marginBottom: 4 }}>Certificate</Text>
                   <Text type="secondary">Certificate of completion included</Text>
@@ -291,13 +291,13 @@ const StudentCourseDetails = () => {
             </Col>
           </Row>
         </TabPane>
-        
+
         <TabPane tab="Meetings" key="meetings">
           {isEnrolled ? (
             meetings.length > 0 ? (
               meetings.map(meeting => (
-                <MeetingJoinCard 
-                  key={meeting._id} 
+                <MeetingJoinCard
+                  key={meeting._id}
                   meeting={meeting}
                   course={course}
                 />
@@ -307,14 +307,14 @@ const StudentCourseDetails = () => {
             )
           ) : (
             <Alert
-              message="Enroll to access meetings"
+              title="Enroll to access meetings"
               description="You need to enroll in this course to view and join scheduled meetings."
               type="info"
               showIcon
             />
           )}
         </TabPane>
-        
+
         <TabPane tab="Instructor" key="instructor">
           <Card>
             <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
@@ -325,13 +325,13 @@ const StudentCourseDetails = () => {
                   Senior Instructor • 5+ years experience
                 </Text>
                 <Paragraph>
-                  With over 5 years of teaching experience and industry expertise, 
-                  {course.tutor?.name || 'the tutor'} has helped thousands of students 
+                  With over 5 years of teaching experience and industry expertise,
+                  {course.tutor?.name || 'the tutor'} has helped thousands of students
                   master new skills. Passionate about education and student success.
                 </Paragraph>
-                
+
                 <Divider />
-                
+
                 <Row gutter={[16, 16]}>
                   <Col span={8}>
                     <div style={{ textAlign: 'center' }}>

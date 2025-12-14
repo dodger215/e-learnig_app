@@ -17,6 +17,7 @@ export { default as TutorCourseDetails } from './pages/tutor/CourseDetails';
 export { default as ScheduleMeeting } from './pages/tutor/ScheduleMeeting';
 export { default as TutorMeetingRoom } from './pages/meeting/TutorMeetingRoom';
 export { default as StudentMeetingRoom } from './pages/meeting/StudentMeetingRoom';
+export { default as MyMeetings } from './pages/student/MyMeetings';
 export { default as Home } from './pages/Home';
 
 // Route constants for easy reference
@@ -28,6 +29,7 @@ export const ROUTES = {
   STUDENT_COURSES: '/student/courses',
   STUDENT_MY_COURSES: '/student/my-courses',
   STUDENT_COURSE_DETAILS: '/student/course/:id',
+  
   STUDENT_MEETINGS: '/student/meetings',
   TUTOR_DASHBOARD: '/tutor',
   TUTOR_COURSES: '/tutor/courses',

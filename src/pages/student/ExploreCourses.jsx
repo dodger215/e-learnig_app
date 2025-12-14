@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Row, Col, Input, Select, Typography, Empty, Spin, Pagination } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useAuth } from '../../contexts/AuthContext';
-import * as courseApi from '../../api/courseApi';
-import * as paymentApi from '../../api/paymentApi';
+import courseApi from '../../api/courseApi';
+import paymentApi from '../../api/paymentApi';
 import CourseCard from '../../components/student/CourseCard';
 import PaymentModal from '../../components/student/PaymentModal';
 
@@ -108,10 +108,10 @@ const ExploreCourses = () => {
   return (
     <div>
       <Title level={2}>Explore Courses</Title>
-      
-      <div style={{ 
-        background: '#fafafa', 
-        padding: 24, 
+
+      <div style={{
+        background: '#fafafa',
+        padding: 24,
         borderRadius: 8,
         marginBottom: 24
       }}>

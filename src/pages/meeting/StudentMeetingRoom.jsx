@@ -1,8 +1,8 @@
 // src/pages/meeting/StudentMeetingRoom.jsx
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom'; // Added Link import
 import { Row, Col, Layout, Drawer, Typography, message, Modal, Alert } from 'antd';
-import { MeetingProvider } from '../../contexts/MeetingContext';
+import { MeetingProvider, useMeeting } from '../../contexts/MeetingContext';
 import VideoConference from '../../components/meeting/VideoConference';
 import ChatPanel from '../../components/meeting/ChatPanel';
 import ParticipantsList from '../../components/meeting/ParticipantsList';
@@ -13,15 +13,15 @@ import { useAuth } from '../../contexts/AuthContext';
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-const StudentMeetingRoom = () => {
+const MeetingRoomContent = () => {
   const { meetingId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const socket = useSocket();
-  
+  const { setLocalStream } = useMeeting();
+
   const [showChat, setShowChat] = useState(false);
   const [showParticipants, setShowParticipants] = useState(true);
-  const [localStream, setLocalStream] = useState(null);
   const [meetingInfo, setMeetingInfo] = useState(null);
   const [waitingForHost, setWaitingForHost] = useState(true);
   const initializedRef = useRef(false);
@@ -31,7 +31,7 @@ const StudentMeetingRoom = () => {
     initializedRef.current = true;
 
     initializeMeeting();
-    
+
     return () => {
       cleanupMeeting();
     };
@@ -51,7 +51,7 @@ const StudentMeetingRoom = () => {
           noiseSuppression: true,
         },
       });
-      
+
       setLocalStream(stream);
 
       // Join meeting via socket
@@ -80,9 +80,6 @@ const StudentMeetingRoom = () => {
   };
 
   const cleanupMeeting = () => {
-    if (localStream) {
-      localStream.getTracks().forEach(track => track.stop());
-    }
     if (socket) {
       socket.emit('leave_meeting', meetingId);
     }
@@ -103,74 +100,80 @@ const StudentMeetingRoom = () => {
   };
 
   return (
-    <MeetingProvider>
-      <Layout style={{ minHeight: '100vh', background: '#202124' }}>
-        <Content style={{ padding: 0 }}>
-          <div style={{ 
-            background: '#202124',
-            padding: 16,
-            borderBottom: '1px solid #3c4043'
+    <Layout style={{ minHeight: '100vh', background: '#202124' }}>
+      <Content style={{ padding: 0 }}>
+        <div style={{
+          background: '#202124',
+          padding: 16,
+          borderBottom: '1px solid #3c4043'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'white'
           }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              color: 'white'
-            }}>
-              <div>
-                <Title level={4} style={{ color: 'white', margin: 0 }}>
-                  {meetingInfo?.title || 'Class Session'}
-                </Title>
-                <div style={{ fontSize: 12, color: '#9aa0a6', marginTop: 4 }}>
-                  Tutor: {meetingInfo?.tutor || 'Loading...'} • Student: {user?.name}
-                </div>
-              </div>
-              <div style={{ color: '#9aa0a6', fontSize: 14 }}>
-                Student View
+            <div>
+              <Title level={4} style={{ color: 'white', margin: 0 }}>
+                {meetingInfo?.title || 'Class Session'}
+              </Title>
+              <div style={{ fontSize: 12, color: '#9aa0a6', marginTop: 4 }}>
+                Tutor: {meetingInfo?.tutor || 'Loading...'} • Student: {user?.name}
               </div>
             </div>
+            <div style={{ color: '#9aa0a6', fontSize: 14 }}>
+              Student View
+            </div>
           </div>
+        </div>
 
-          {waitingForHost && (
-            <Alert
-              message="Waiting for tutor to join..."
-              description="The meeting will start once the tutor joins."
-              type="info"
-              showIcon
-              style={{ margin: 16 }}
+        {waitingForHost && (
+          <Alert
+            title="Waiting for tutor to join..."
+            description="The meeting will start once the tutor joins."
+            type="info"
+            showIcon
+            style={{ margin: 16 }}
+          />
+        )}
+
+        <Row style={{ height: 'calc(100vh - 160px)' }}>
+          <Col span={showParticipants ? 18 : 24} style={{ padding: 16 }}>
+            <VideoConference />
+
+            <ControlsBar
+              onToggleChat={() => setShowChat(!showChat)}
+              onToggleParticipants={() => setShowParticipants(!showParticipants)}
+              onLeaveMeeting={handleLeaveMeeting}
             />
-          )}
+          </Col>
 
-          <Row style={{ height: 'calc(100vh - 160px)' }}>
-            <Col span={showParticipants ? 18 : 24} style={{ padding: 16 }}>
-              <VideoConference />
-              
-              <ControlsBar
-                onToggleChat={() => setShowChat(!showChat)}
-                onToggleParticipants={() => setShowParticipants(!showParticipants)}
-                onLeaveMeeting={handleLeaveMeeting}
-              />
+          {showParticipants && (
+            <Col span={6} style={{ padding: 16, paddingLeft: 0 }}>
+              <ParticipantsList />
             </Col>
+          )}
+        </Row>
+      </Content>
 
-            {showParticipants && (
-              <Col span={6} style={{ padding: 16, paddingLeft: 0 }}>
-                <ParticipantsList />
-              </Col>
-            )}
-          </Row>
-        </Content>
+      <Drawer
+        title="Meeting Chat"
+        placement="right"
+        onClose={() => setShowChat(false)}
+        open={showChat}
+        width={350}
+        bodyStyle={{ padding: 0 }}
+      >
+        <ChatPanel meetingId={meetingId} />
+      </Drawer>
+    </Layout>
+  );
+};
 
-        <Drawer
-          title="Meeting Chat"
-          placement="right"
-          onClose={() => setShowChat(false)}
-          open={showChat}
-          width={350}
-          bodyStyle={{ padding: 0 }}
-        >
-          <ChatPanel meetingId={meetingId} />
-        </Drawer>
-      </Layout>
+const StudentMeetingRoom = () => {
+  return (
+    <MeetingProvider>
+      <MeetingRoomContent />
     </MeetingProvider>
   );
 };
